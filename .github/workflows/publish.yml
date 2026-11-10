@@ -1,0 +1,71 @@
+name: Publish to PyPI
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish the checked distributions to PyPI
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pypi-release
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Build and check distributions
+        run: |
+          python -m pip install build twine
+          python -m build
+          python -m twine check --strict dist/*
+      - name: Test the installed wheel outside the checkout
+        run: |
+          python -m venv "$RUNNER_TEMP/robotprobe-install"
+          "$RUNNER_TEMP/robotprobe-install/bin/python" -m pip install dist/*.whl
+          cd "$RUNNER_TEMP"
+          "$RUNNER_TEMP/robotprobe-install/bin/robotsec-range" list-challenges
+          "$RUNNER_TEMP/robotprobe-install/bin/robotprobe" demo --out "$RUNNER_TEMP/robotprobe-demo"
+          "$RUNNER_TEMP/robotprobe-install/bin/python" - <<'PY'
+          import json
+          from pathlib import Path
+
+          output = Path('robotprobe-demo')
+          for name in ('bundle.json', 'summary.json', 'causal_diff.json', 'check.json', 'report.md'):
+              assert (output / name).is_file(), name
+          assert json.loads((output / 'check.json').read_text())['passed']
+          PY
+      - uses: actions/upload-artifact@v5
+        with:
+          name: python-distributions
+          path: dist/
+          if-no-files-found: error
+
+  publish:
+    if: inputs.publish
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/robotprobe/
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v6
+        with:
+          name: python-distributions
+          path: dist/
+      - name: Publish with PyPI Trusted Publishing
+        uses: pypa/gh-action-pypi-publish@release/v1

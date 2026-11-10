@@ -11,9 +11,8 @@ them, and it is not a simulator or a benchmark.
 No account, no GPU, no robot. `demo` runs a bundled incident end to end and writes a report.
 
 ```bash
-git clone https://github.com/adi0x90/robotprobe && cd robotprobe
-make setup                  # uv sync: core library + dev tooling
-uv run robotprobe demo      # writes ./robotprobe-demo-out
+python -m pip install --pre robotprobe
+robotprobe demo             # writes ./robotprobe-demo-out
 cat robotprobe-demo-out/report.md
 ```
 
@@ -52,11 +51,20 @@ noise, so the observed layer can only be `action_postprocess` or `unknown`. Agre
 independent confirmation.
 
 `Layer match score` is a fixed value assigned by the layer rule, not a calibrated probability. See
-[Claims](docs/status-and-claims.md#claims) for exactly what the fields mean.
+[Claims](https://github.com/adi0x90/robotprobe/blob/main/docs/status-and-claims.md#claims) for exactly what the fields mean.
 
 ## Install
 
+Install the alpha package from PyPI:
+
 ```bash
+python -m pip install --pre robotprobe
+```
+
+For the source examples and development tools, clone the repository:
+
+```bash
+git clone https://github.com/adi0x90/robotprobe && cd robotprobe
 make setup                  # core library + dev tooling (this is all most people need)
 ```
 
@@ -76,7 +84,8 @@ python -m pip install -e '.[simulators]'      # + Gymnasium classic control
 python -m pip install -e '.[ros2-decoders]'   # + ROS 2 MCAP/CDR decoding (no ROS install)
 ```
 
-The package is not on PyPI yet.
+The `--pre` option includes alpha releases. The source checkout is needed for
+commands below that reference `examples/` or `scripts/`.
 
 ## What You Can Do
 
@@ -91,7 +100,7 @@ The package is not on PyPI yet.
 | Ingest a ROS 2 bag | `robotprobe ingest ros2-mcap --input bag.mcap --out traces/run.jsonl` |
 | Diff model activations (experimental) | `robotprobe mech collect` / `diff-activations` |
 
-Full command reference: [Command Reference](docs/cli.md).
+Full command reference: [Command Reference](https://github.com/adi0x90/robotprobe/blob/main/docs/cli.md).
 
 ## Franka runtime
 
@@ -116,31 +125,31 @@ uv run python examples/demos/franka/run_demos.py --demo all --out .artifacts/fra
 The local suite does not load a learned model or simulate physics. LIBERO simulation needs a
 separate Linux/CUDA run. The real-Franka path observes only; physical actuation is not implemented.
 
-See [`docs/franka.md`](docs/franka.md) for the demos, the GPU PI0.5/LIBERO run, and the read-only
-real-robot path, and [`docs/runtime.md`](docs/runtime.md) for the runtime architecture and backend
+See [`docs/franka.md`](https://github.com/adi0x90/robotprobe/blob/main/docs/franka.md) for the demos, the GPU PI0.5/LIBERO run, and the read-only
+real-robot path, and [`docs/runtime.md`](https://github.com/adi0x90/robotprobe/blob/main/docs/runtime.md) for the runtime architecture and backend
 authoring.
 
 ## Documentation
 
 | If you want to… | Read |
 | --- | --- |
-| install and run the demos | [`docs/getting-started.md`](docs/getting-started.md) |
-| understand traces, diffs, and how a diagnosis is read | [`docs/concepts.md`](docs/concepts.md) |
-| look up a command | [`docs/cli.md`](docs/cli.md) |
-| encode your own failure mode as a pack | [`docs/packs.md`](docs/packs.md) |
-| bring in ROS 2, MCAP, vla-eval, or dataset recordings | [`docs/integrations.md`](docs/integrations.md) |
-| run a policy through the modular runtime | [`docs/runtime.md`](docs/runtime.md) |
-| use the Franka pack or run PI0.5 on LIBERO | [`docs/franka.md`](docs/franka.md) |
-| capture and compare model activations | [`docs/mechprobe.md`](docs/mechprobe.md) |
-| try campaigns, live instrumentation, or world-model checks | [`docs/experimental.md`](docs/experimental.md) |
-| know what works, what is claimed, and the evidence | [`docs/status-and-claims.md`](docs/status-and-claims.md) |
+| install and run the demos | [`docs/getting-started.md`](https://github.com/adi0x90/robotprobe/blob/main/docs/getting-started.md) |
+| understand traces, diffs, and how a diagnosis is read | [`docs/concepts.md`](https://github.com/adi0x90/robotprobe/blob/main/docs/concepts.md) |
+| look up a command | [`docs/cli.md`](https://github.com/adi0x90/robotprobe/blob/main/docs/cli.md) |
+| encode your own failure mode as a pack | [`docs/packs.md`](https://github.com/adi0x90/robotprobe/blob/main/docs/packs.md) |
+| bring in ROS 2, MCAP, vla-eval, or dataset recordings | [`docs/integrations.md`](https://github.com/adi0x90/robotprobe/blob/main/docs/integrations.md) |
+| run a policy through the modular runtime | [`docs/runtime.md`](https://github.com/adi0x90/robotprobe/blob/main/docs/runtime.md) |
+| use the Franka pack or run PI0.5 on LIBERO | [`docs/franka.md`](https://github.com/adi0x90/robotprobe/blob/main/docs/franka.md) |
+| capture and compare model activations | [`docs/mechprobe.md`](https://github.com/adi0x90/robotprobe/blob/main/docs/mechprobe.md) |
+| try campaigns, live instrumentation, or world-model checks | [`docs/experimental.md`](https://github.com/adi0x90/robotprobe/blob/main/docs/experimental.md) |
+| know what works, what is claimed, and the evidence | [`docs/status-and-claims.md`](https://github.com/adi0x90/robotprobe/blob/main/docs/status-and-claims.md) |
 
 ## Status
 
 `v0.2.0-alpha` is a research preview. The local path, the CLI, pack authoring, the simulators, the
 Franka runtime demos, and offline MechProbe analysis work on a CPU. The PI0.5/LIBERO path has run on
 a GPU for one checkpoint, task, and seed, with mixed diagnostic results; see
-[Evidence](docs/status-and-claims.md#evidence) for what was and was not established.
+[Evidence](https://github.com/adi0x90/robotprobe/blob/main/docs/status-and-claims.md#evidence) for what was and was not established.
 
 ## Development
 
@@ -151,17 +160,19 @@ make ci       # lint, tests, doctor, and a demo smoke test
 ```
 
 GitHub Actions runs the same checks on push and pull request. See
-[`CONTRIBUTING.md`](CONTRIBUTING.md).
+[`CONTRIBUTING.md`](https://github.com/adi0x90/robotprobe/blob/main/CONTRIBUTING.md).
+
+Maintainers: see [Publishing](https://github.com/adi0x90/robotprobe/blob/main/docs/publishing.md) for the PyPI release workflow.
 
 ## Safety
 
 Bundled interventions are simulation-only: every manifest declares
 `release_classification: sim_only` and `hardware_allowed: false`. Nothing here is validated for real
-hardware. See [Safety Policy](docs/safety.md).
+hardware. See [Safety Policy](https://github.com/adi0x90/robotprobe/blob/main/docs/safety.md).
 
 ## Security
 
-Report suspected vulnerabilities privately; see [`SECURITY.md`](SECURITY.md).
+Report suspected vulnerabilities privately; see [`SECURITY.md`](https://github.com/adi0x90/robotprobe/blob/main/SECURITY.md).
 
 ## Third-party names
 
@@ -172,4 +183,4 @@ any of them, and it redistributes no vendor SDKs, model weights, or benchmark da
 
 ## License
 
-Apache-2.0. See [LICENSE](LICENSE).
+Apache-2.0. See [LICENSE](https://github.com/adi0x90/robotprobe/blob/main/LICENSE).

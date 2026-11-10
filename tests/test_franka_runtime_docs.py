@@ -42,7 +42,7 @@ class FrankaRuntimeDocumentationTests(unittest.TestCase):
 
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         for path in REQUIRED_DOCS:
-            expected = f"docs/{path.name}"
+            expected = f"https://github.com/adi0x90/robotprobe/blob/main/docs/{path.name}"
             with self.subTest(link=expected):
                 self.assertIn(f"]({expected})", readme)
 
