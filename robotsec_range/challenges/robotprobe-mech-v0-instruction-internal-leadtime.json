@@ -1,0 +1,15 @@
+{
+  "id": "robotprobe-mech-v0-instruction-internal-leadtime",
+  "diagnosis": {},
+  "required_evidence": {
+    "min_evidence_level": 1,
+    "internal_divergence_precedes_action_divergence": true,
+    "min_internal_lead_time": 4,
+    "model_root_cause_claim_allowed": false,
+    "feature_promotions_allowed": false
+  },
+  "metadata": {
+    "track": "mech-forensics",
+    "claim_boundary": "observed internal temporal lead from eligible model captures; prediction and causation are untested"
+  }
+}

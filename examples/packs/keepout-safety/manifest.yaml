@@ -1,0 +1,33 @@
+id: robotprobe-pack-keepout-safety
+version: 0.1.0
+challenges:
+  - challenges/robotprobe-v1-security-keepout-bypass.json
+plugins:
+  - id: robotprobe.contracts.keepout_margin
+    type: contract
+    version: 0.1.0
+    files:
+      - contracts/keepout_margin.yaml
+    safety:
+      release_classification: sim_only
+      hardware_allowed: false
+    claims:
+      proves:
+        - detects keepout-zone violations in recorded simulator traces
+      does_not_prove:
+        - hardware certification
+        - physical exploitability
+  - id: robotprobe.interventions.stealth_velocity_bias_keepout
+    type: intervention
+    version: 0.1.0
+    files:
+      - interventions/stealth_velocity_bias_keepout.yaml
+    safety:
+      release_classification: sim_only
+      hardware_allowed: false
+    claims:
+      proves:
+        - perturbs post-policy velocity commands in a simulator-only keepout scenario
+      does_not_prove:
+        - real robot command access
+        - safe hardware execution

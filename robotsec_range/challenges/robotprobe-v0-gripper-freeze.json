@@ -1,0 +1,13 @@
+{
+  "id": "robotprobe-v0-gripper-freeze",
+  "diagnosis": {
+    "layer": "action_postprocess",
+    "contract": "ActionSpaceContract",
+    "fault": "gripper_freeze_mid"
+  },
+  "required_evidence": {
+    "raw_policy_action_changed": false,
+    "postprocessed_action_changed": true,
+    "min_step_inflation": 1.5
+  }
+}

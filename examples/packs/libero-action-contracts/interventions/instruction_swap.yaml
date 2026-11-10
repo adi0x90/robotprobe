@@ -1,0 +1,20 @@
+id: INSTRUCTION.SWAP_TARGET.001
+name: instruction_swap
+release_classification: sim_only
+target_layers:
+  - instruction
+contract: InstructionIntentContract
+window:
+  start_step: 0
+  end_step: 9999
+mutation:
+  field: instruction
+  behavior: replace_with_counterfactual_task
+expected_effects:
+  instruction_changed: true
+  raw_policy_action_may_change: true
+  postprocessed_action_may_change: true
+  shortcut_success_is_signal: true
+safety:
+  sim_only: true
+  hardware_allowed: false

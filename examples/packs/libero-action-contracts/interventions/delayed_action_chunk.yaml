@@ -1,0 +1,19 @@
+id: ACTION.CHUNK.DELAY.001
+name: action_chunk_boundary_mismatch
+release_classification: sim_only
+target_layers:
+  - action_postprocess
+contract: ActionChunkContract
+window:
+  start_step: 32
+  end_step: 96
+mutation:
+  field: action_chunk
+  behavior: replay_previous_chunk_at_boundary
+expected_effects:
+  raw_policy_action_changed: false
+  postprocessed_action_changed: true
+  boundary_first_divergence_expected: true
+safety:
+  sim_only: true
+  hardware_allowed: false

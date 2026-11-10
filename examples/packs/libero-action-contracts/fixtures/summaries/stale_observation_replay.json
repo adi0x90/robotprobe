@@ -1,0 +1,23 @@
+{
+  "evidence": {
+    "first_divergence_step": 20,
+    "instruction_changed": false,
+    "observation_replayed": true,
+    "outcome_delta": {
+      "step_inflation": 3.2195121951219514,
+      "success_changed": false
+    },
+    "postprocessed_action_changed": true,
+    "postprocessed_action_drift_vs_clean": true,
+    "raw_policy_action_changed": true,
+    "raw_policy_drift_vs_clean": true
+  },
+  "replay_level": "L0_TRACE_PLAYBACK",
+  "root_cause_hypothesis": {
+    "contract": "SensorFreshnessContract",
+    "declared_layer": "observation",
+    "fault": "stale_observation_replay",
+    "layer": "observation",
+    "rule_match_score": 0.87
+  }
+}

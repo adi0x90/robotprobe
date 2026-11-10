@@ -1,0 +1,18 @@
+format: robotprobe.mech.capture_config.v0
+id: synthetic_instruction_swap_l18
+target: synthetic
+model_access: white_box
+layers:
+  - name: policy.backbone.layers.18
+    kind: residual_stream
+    capture: output
+steps:
+  mode: every_n
+  n: 1
+storage:
+  format: safetensors
+  dtype: float16
+  max_bytes_per_run: 2000000000
+claim_boundary:
+  no_feature_labels: true
+  no_causal_claims: true

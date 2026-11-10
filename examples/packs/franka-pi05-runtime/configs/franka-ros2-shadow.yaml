@@ -1,0 +1,49 @@
+format: robotprobe.runtime.run.v0
+pack: ..
+components:
+  policy:
+    plugin: robotprobe.policies.pi05_lerobot
+    options:
+      checkpoint: lerobot/pi05_libero_finetuned_v044
+      revision: dbf8a3f794a9c4297b44f40b752712f50073d945
+      tokenizer_checkpoint: google/paligemma-3b-pt-224
+      tokenizer_revision: 35e4f46485b4d07967e7e9935bc3786aad50687c
+      device: cuda
+      num_inference_steps: 10
+      n_action_steps: 10
+  embodiment:
+    plugin: robotprobe.embodiments.franka
+  backend:
+    plugin: robotprobe.backends.franka_ros2_shadow
+    options:
+      transport_options: {}
+      max_state_age_ms: 250
+  scenario:
+    plugin: robotprobe.scenarios.franka_hardware_shadow
+    options:
+      scenario_id: franka-shadow-observation
+      instruction: Pick up the black bowl.
+      seed: 7
+      max_steps: 20
+capture:
+  profile: ../capture/pi05-semantic.yaml
+  storage: summary
+execution:
+  mode: hardware_shadow
+  n_action_steps: 1
+  safety:
+    command_space: franka.cartesian_delta_gripper.v0
+    max_abs:
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+    max_observation_age_ms: 5000
+trace:
+  out: ../artifacts/franka-ros2-shadow.jsonl
+  run_id: runtime:franka-ros2-shadow
+  target: lerobot/pi05_libero_finetuned_v044
+  scenario: franka-shadow-observation

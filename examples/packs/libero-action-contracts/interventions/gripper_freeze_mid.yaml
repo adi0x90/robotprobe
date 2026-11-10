@@ -1,0 +1,20 @@
+id: ACTION.GRIPPER.FREEZE.MID.001
+name: gripper_freeze_mid
+release_classification: sim_only
+target_layers:
+  - action_postprocess
+contract: ActionSpaceContract
+window:
+  start_step: 35
+  end_step: 120
+mutation:
+  dimension: gripper
+  behavior: hold_previous_value
+expected_effects:
+  raw_policy_action_changed: false
+  postprocessed_action_changed: true
+  binary_success_may_remain_green: true
+  step_count_increase_min: 1.5
+safety:
+  sim_only: true
+  hardware_allowed: false

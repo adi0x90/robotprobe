@@ -1,0 +1,50 @@
+id: robotprobe-pack-libero-action-contracts
+version: 0.2.0
+trust_level: trusted_core_pack
+publisher:
+  name: robotprobe
+  url: https://github.com/adi0x90/robotprobe
+compatibility:
+  robotprobe_min: 0.2.0
+  schema_version: robotprobe.pack.v0.2
+execution:
+  imports_code_during_validate: false
+  imports_code_during_test: false
+  network_access_required: false
+  filesystem_write_paths:
+    - $PACK_OUT
+challenges:
+  - challenges/libero-gripper-freeze.json
+  - challenges/libero-stale-observation.json
+  - challenges/libero-instruction-swap.json
+  - challenges/action-scale-mismatch.json
+  - challenges/action-chunk-boundary.json
+plugins:
+  - id: robotprobe.challenge_packs.libero_action_contracts
+    type: challenge_pack
+    version: 0.2.1
+    files:
+      - contracts/gripper_freshness.yaml
+      - contracts/action_scale_margin.yaml
+      - contracts/action_chunk_delay.yaml
+      - contracts/sensor_freshness.yaml
+      - contracts/instruction_intent.yaml
+      - interventions/gripper_freeze_mid.yaml
+      - interventions/z_scale_mismatch.yaml
+      - interventions/delayed_action_chunk.yaml
+      - interventions/stale_observation_replay.yaml
+      - interventions/instruction_swap.yaml
+      - docs/README.md
+    safety:
+      release_classification: sim_only
+      hardware_allowed: false
+    claims:
+      proves:
+        - LIBERO action-contract incidents can be represented as golden root-cause summaries and reports
+        - action-postprocess faults are distinguished from policy/model failures when raw policy actions stay unchanged
+        - observation and instruction boundary faults remain separate diagnosis classes
+      does_not_prove:
+        - hardware certification
+        - real robot exploitability
+        - broad VLA robustness
+        - model failure when the first changed boundary is action-postprocess

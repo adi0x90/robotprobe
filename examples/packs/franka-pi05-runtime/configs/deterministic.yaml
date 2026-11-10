@@ -1,0 +1,56 @@
+format: robotprobe.runtime.run.v0
+pack: ..
+components:
+  policy:
+    plugin: robotprobe.policies.franka_deterministic
+    options:
+      step_size: 0.02
+      action_horizon: 2
+      gripper_command: 1.0
+  embodiment:
+    plugin: robotprobe.embodiments.franka
+  backend:
+    plugin: robotprobe.backends.franka_deterministic
+  scenario:
+    plugin: robotprobe.scenarios.franka_deterministic_reach
+    options:
+      scenario_id: deterministic-franka-reach
+      instruction: Move the Franka end effector to the target.
+      seed: 7
+      max_steps: 8
+      initial_position:
+        - 0.4
+        - 0.0
+        - 0.3
+      target_position:
+        - 0.45
+        - 0.0
+        - 0.3
+      tolerance: 0.00000001
+execution:
+  mode: simulation
+  n_action_steps: 2
+  safety:
+    command_space: franka.cartesian_delta_gripper.v0
+    max_abs:
+      - 0.05
+      - 0.05
+      - 0.05
+      - 0.2
+      - 0.2
+      - 0.2
+      - 1.0
+    workspace_min:
+      - 0.2
+      - -0.5
+      - 0.1
+    workspace_max:
+      - 0.7
+      - 0.5
+      - 0.8
+    max_observation_age_ms: 1000
+trace:
+  out: ../artifacts/deterministic-trace.jsonl
+  run_id: runtime:franka-deterministic
+  target: deterministic-franka-policy
+  scenario: deterministic-franka-reach

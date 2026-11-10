@@ -1,0 +1,25 @@
+{
+  "id": "robotprobe-v1-libero-instruction-realtrace",
+  "diagnosis": {
+    "layer": "instruction",
+    "contract": "InstructionIntentContract",
+    "fault": "instruction_swap"
+  },
+  "required_evidence": {
+    "instruction_changed": true
+  },
+  "metadata": {
+    "source": {
+      "benchmark": "LIBERO Spatial",
+      "policy": "Pi0.5",
+      "task": "task0",
+      "seed": 10,
+      "origin": "AllenAI vla-eval model-server run"
+    },
+    "fixture_refs": {
+      "clean_trace": "robotsec_range/fixtures/robotprobe-v1-libero-realtrace/clean.jsonl",
+      "perturbed_trace": "robotsec_range/fixtures/robotprobe-v1-libero-realtrace/instruction_swap.jsonl",
+      "golden_summary": "robotsec_range/fixtures/robotprobe-v1-libero-realtrace/instruction_golden_summary.json"
+    }
+  }
+}

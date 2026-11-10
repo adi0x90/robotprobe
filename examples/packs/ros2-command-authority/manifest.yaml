@@ -1,0 +1,19 @@
+id: robotprobe-pack-ros2-command-authority
+version: 0.1.0
+plugins:
+  - id: robotprobe.adapters.ros2_command_authority
+    type: adapter
+    version: 0.1.0
+    entrypoint: robotprobe.integrations.ros2.mcap_adapter:ingest_ros2_mcap
+    files:
+      - adapters/ros2_command_authority.md
+      - contracts/command_authority.yaml
+    safety:
+      release_classification: trace_only
+      hardware_allowed: false
+    claims:
+      proves:
+        - defines a trace-only ROS 2 command-authority audit pack
+      does_not_prove:
+        - hardware certification
+        - safe hardware execution or ROS 2 exploitability

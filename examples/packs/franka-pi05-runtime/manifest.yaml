@@ -1,0 +1,359 @@
+id: robotprobe-pack-franka-pi05-runtime
+version: 0.2.0
+trust_level: trusted_core_pack
+publisher:
+  name: robotprobe
+  url: https://github.com/adi0x90/robotprobe
+compatibility:
+  robotprobe_min: 0.2.0
+  schema_version: robotprobe.runtime.run.v0
+execution:
+  imports_code_during_validate: false
+  imports_code_during_test: false
+  network_access_required: false
+  filesystem_write_paths:
+    - $PACK_OUT
+plugins:
+  - id: robotprobe.backends.franka_ros2_shadow
+    type: adapter
+    version: 0.1.0
+    entrypoint: robotprobe.integrations.franka.ros2_shadow:FrankaRos2ShadowBackend
+    capabilities:
+      format: robotprobe.runtime.component.v0
+      kind: backend
+      component_id: franka.ros2_read_only_shadow.v0
+      command_spaces:
+        - franka.cartesian_delta_gripper.v0
+      observation_streams:
+        - agent_rgb
+        - wrist_rgb
+        - eef_pose
+        - gripper
+        - joint_state
+        - robot_mode
+        - controller_authority
+      runtime_family: franka_hardware_shadow
+      is_hardware: true
+      supports_reset: true
+      supports_ground_truth: false
+      supports_shadow: true
+      can_apply_hardware_commands: false
+      requires_reset: false
+      optional_dependencies:
+        - robotprobe-franka-ros2
+    files:
+      - configs/franka-ros2-shadow.yaml
+    safety:
+      release_classification: hardware_shadow
+      hardware_allowed: false
+    claims:
+      proves:
+        - read-only timestamped Franka state can cross the runtime backend boundary
+        - shadow receipts cannot claim that a hardware command was applied
+      does_not_prove:
+        - availability or correctness of a site-specific ROS 2 transport
+        - safe conversion of model actions into physical Franka commands
+        - physical task success
+  - id: robotprobe.scenarios.franka_hardware_shadow
+    type: adapter
+    version: 0.1.0
+    entrypoint: robotprobe.integrations.franka.ros2_shadow:FrankaShadowScenario
+    capabilities:
+      format: robotprobe.runtime.component.v0
+      kind: scenario
+      component_id: franka.scenario.hardware_shadow.v0
+      command_spaces:
+      observation_streams:
+      runtime_family: franka_hardware_shadow
+      is_hardware: false
+      supports_reset: false
+      supports_ground_truth: false
+      supports_shadow: false
+      can_apply_hardware_commands: false
+      requires_reset: true
+      optional_dependencies:
+    files:
+      - configs/franka-ros2-shadow.yaml
+    safety:
+      release_classification: hardware_shadow
+      hardware_allowed: false
+    claims:
+      proves:
+        - physical observation sessions use logical reset semantics only
+      does_not_prove:
+        - a repeatable physical initial state
+        - physical task success
+  - id: robotprobe.backends.libero_franka
+    type: adapter
+    version: 0.1.0
+    entrypoint: robotprobe.integrations.franka.libero_backend:LiberoFrankaBackend
+    capabilities:
+      format: robotprobe.runtime.component.v0
+      kind: backend
+      component_id: lerobot.libero_franka.v0
+      command_spaces:
+        - franka.cartesian_delta_gripper.v0
+      observation_streams:
+        - agent_rgb
+        - wrist_rgb
+        - eef_pose
+        - gripper
+        - joint_state
+      runtime_family: lerobot_libero
+      is_hardware: false
+      supports_reset: true
+      supports_ground_truth: true
+      supports_shadow: false
+      can_apply_hardware_commands: false
+      requires_reset: false
+      optional_dependencies:
+        - lerobot
+        - libero
+        - mujoco
+    files:
+      - configs/pi05-libero.yaml
+    safety:
+      release_classification: sim_only
+      hardware_allowed: false
+    claims:
+      proves:
+        - lazy LeRobot LIBERO environment lifecycle behind the runtime backend contract
+        - simulated Franka state and execution receipts are normalized into RobotProbe
+      does_not_prove:
+        - local LIBERO installation
+        - checkpoint task success
+        - physical Franka safety
+  - id: robotprobe.scenarios.libero_task
+    type: adapter
+    version: 0.1.0
+    entrypoint: robotprobe.integrations.franka.libero_backend:LiberoScenarioProvider
+    capabilities:
+      format: robotprobe.runtime.component.v0
+      kind: scenario
+      component_id: libero.scenario.task.v0
+      command_spaces:
+      observation_streams:
+      runtime_family: lerobot_libero
+      is_hardware: false
+      supports_reset: false
+      supports_ground_truth: false
+      supports_shadow: false
+      can_apply_hardware_commands: false
+      requires_reset: true
+      optional_dependencies:
+        - libero
+    files:
+      - configs/pi05-libero.yaml
+    safety:
+      release_classification: sim_only
+      hardware_allowed: false
+    claims:
+      proves:
+        - suite task seed and instruction are represented independently of the backend
+      does_not_prove:
+        - LIBERO runtime availability
+        - task success
+  - id: robotprobe.policies.pi05_lerobot
+    type: adapter
+    version: 0.1.0
+    entrypoint: robotprobe.integrations.lerobot.pi05_policy:PI05PolicyAdapter
+    capabilities:
+      format: robotprobe.runtime.component.v0
+      kind: policy
+      component_id: lerobot.pi05_libero.v044
+      command_spaces:
+        - franka.cartesian_delta_gripper.v0
+      observation_streams:
+        - rgb
+        - eef_pose
+        - gripper
+        - joint_state
+      runtime_family: lerobot_pi05
+      is_hardware: false
+      supports_reset: false
+      supports_ground_truth: false
+      supports_shadow: false
+      can_apply_hardware_commands: false
+      requires_reset: false
+      optional_dependencies:
+        - torch
+        - lerobot
+        - transformers
+    files:
+      - configs/pi05-libero.yaml
+      - capture/pi05-semantic.yaml
+    safety:
+      release_classification: sim_only
+      hardware_allowed: false
+    claims:
+      proves:
+        - lazy PI0.5 policy integration and semantic activation probe declarations
+        - complete PI0.5 action chunks cross the RobotProbe scheduling boundary
+      does_not_prove:
+        - checkpoint availability in the current environment
+        - LIBERO task success
+        - causal meaning of captured activations
+        - physical Franka safety
+  - id: robotprobe.policies.franka_deterministic
+    type: adapter
+    version: 0.1.0
+    entrypoint: robotprobe.integrations.franka.deterministic:DeterministicReachPolicy
+    capabilities:
+      format: robotprobe.runtime.component.v0
+      kind: policy
+      component_id: franka.policy.deterministic_reach.v0
+      command_spaces:
+        - franka.cartesian_delta_gripper.v0
+      observation_streams:
+        - rgb
+        - eef_pose
+        - gripper
+        - joint_state
+      runtime_family: franka_deterministic
+      is_hardware: false
+      supports_reset: false
+      supports_ground_truth: false
+      supports_shadow: false
+      can_apply_hardware_commands: false
+      requires_reset: false
+      optional_dependencies:
+    safety:
+      release_classification: sim_only
+      hardware_allowed: false
+    claims:
+      proves:
+        - deterministic action chunk generation for runtime contract tests
+      does_not_prove:
+        - learned policy behavior
+        - physical Franka safety
+  - id: robotprobe.embodiments.franka
+    type: adapter
+    version: 0.1.0
+    entrypoint: robotprobe.integrations.franka.embodiment:FrankaEmbodimentAdapter
+    capabilities:
+      format: robotprobe.runtime.component.v0
+      kind: embodiment
+      component_id: franka.canonical.v0
+      command_spaces:
+        - franka.cartesian_delta_gripper.v0
+      observation_streams:
+        - rgb
+        - eef_pose
+        - gripper
+        - joint_state
+      runtime_family: franka
+      is_hardware: false
+      supports_reset: false
+      supports_ground_truth: false
+      supports_shadow: false
+      can_apply_hardware_commands: false
+      requires_reset: false
+      optional_dependencies:
+    safety:
+      release_classification: sim_only
+      hardware_allowed: false
+    claims:
+      proves:
+        - canonical Franka observation and action boundary
+      does_not_prove:
+        - backend transport correctness
+        - physical Franka safety
+  - id: robotprobe.backends.franka_deterministic
+    type: adapter
+    version: 0.1.0
+    entrypoint: robotprobe.integrations.franka.deterministic:DeterministicFrankaBackend
+    capabilities:
+      format: robotprobe.runtime.component.v0
+      kind: backend
+      component_id: franka.deterministic_kinematic.v0
+      command_spaces:
+        - franka.cartesian_delta_gripper.v0
+      observation_streams:
+        - synthetic_rgb
+        - eef_pose
+        - gripper
+        - joint_state
+      runtime_family: franka_deterministic
+      is_hardware: false
+      supports_reset: true
+      supports_ground_truth: true
+      supports_shadow: false
+      can_apply_hardware_commands: false
+      requires_reset: false
+      optional_dependencies:
+    safety:
+      release_classification: sim_only
+      hardware_allowed: false
+    claims:
+      proves:
+        - deterministic kinematic backend contract and trace path
+      does_not_prove:
+        - Franka dynamics or contact physics
+        - LIBERO benchmark compatibility
+        - physical Franka safety
+  - id: robotprobe.backends.franka_recorded_replay
+    type: adapter
+    version: 0.1.0
+    entrypoint: robotprobe.integrations.franka.replay_backend:FrankaRecordedReplayBackend
+    capabilities:
+      format: robotprobe.runtime.component.v0
+      kind: backend
+      component_id: franka.recorded_snapshot_replay.v0
+      command_spaces:
+        - franka.cartesian_delta_gripper.v0
+      observation_streams:
+        - synthetic_rgb
+        - eef_pose
+        - gripper
+        - joint_state
+      runtime_family: franka_recorded_replay
+      is_hardware: false
+      supports_reset: true
+      supports_ground_truth: false
+      supports_shadow: false
+      can_apply_hardware_commands: false
+      requires_reset: false
+      optional_dependencies:
+    files:
+      - configs/franka-recorded-replay.yaml
+    safety:
+      release_classification: sim_only
+      hardware_allowed: false
+    claims:
+      proves:
+        - configuration-driven read-only evaluation over a recorded-format Franka snapshot fixture
+        - execution receipts remain explicit when no simulated command is applied
+      does_not_prove:
+        - that the synthetic recorded-format fixture came from a physical Franka
+        - physical transport behavior or physical task success
+        - Franka dynamics contact physics or physical safety
+  - id: robotprobe.scenarios.franka_deterministic_reach
+    type: adapter
+    version: 0.1.0
+    entrypoint: robotprobe.integrations.franka.scenarios:DeterministicReachScenario
+    capabilities:
+      format: robotprobe.runtime.component.v0
+      kind: scenario
+      component_id: franka.scenario.deterministic_reach.v0
+      command_spaces:
+      observation_streams:
+      runtime_family: franka_deterministic
+      is_hardware: false
+      supports_reset: false
+      supports_ground_truth: false
+      supports_shadow: false
+      can_apply_hardware_commands: false
+      requires_reset: true
+      optional_dependencies:
+    files:
+      - configs/deterministic.yaml
+      - docs/README.md
+    safety:
+      release_classification: sim_only
+      hardware_allowed: false
+    claims:
+      proves:
+        - bounded deterministic Franka reach scenario configuration
+      does_not_prove:
+        - representative manipulation benchmark performance
+        - physical Franka safety

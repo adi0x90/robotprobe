@@ -1,0 +1,18 @@
+{
+  "format": "robotprobe.mech.dictionary.v0",
+  "id": "synthetic-target-direction",
+  "type": "manual_direction",
+  "model_name": "synthetic",
+  "features": [
+    {
+      "feature_id": "target_object_direction",
+      "label": "target-object selection",
+      "layer": "policy.backbone.layers.18",
+      "direction": [1.0, 0.0, 0.0]
+    }
+  ],
+  "claim_boundary": {
+    "labels_are_candidates": true,
+    "causal_without_intervention": false
+  }
+}

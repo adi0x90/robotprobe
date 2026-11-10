@@ -1,0 +1,18 @@
+id: robotprobe-pack-vla-eval-adapter
+version: 0.1.0
+plugins:
+  - id: robotprobe.adapters.vla_eval
+    type: adapter
+    version: 0.1.0
+    entrypoint: robotprobe.integrations.vla_eval.episode_ingest:ingest_vla_eval_episode
+    files:
+      - adapters/vla_eval.md
+    safety:
+      release_classification: sim_only
+      hardware_allowed: false
+    claims:
+      proves:
+        - defines a simulator-only vla-eval adapter pack scaffold
+      does_not_prove:
+        - hardware certification
+        - benchmark compatibility without running the upstream harness

@@ -1,0 +1,27 @@
+{
+  "id": "robotprobe-v1-libero-gripper-realtrace",
+  "diagnosis": {
+    "layer": "action_postprocess",
+    "contract": "ActionSpaceContract",
+    "fault": "gripper_freeze_mid"
+  },
+  "required_evidence": {
+    "raw_policy_action_changed": false,
+    "postprocessed_action_changed": true,
+    "min_step_inflation": 1.5
+  },
+  "metadata": {
+    "source": {
+      "benchmark": "LIBERO Spatial",
+      "policy": "Pi0.5",
+      "task": "task0",
+      "seed": 10,
+      "origin": "AllenAI vla-eval model-server run"
+    },
+    "fixture_refs": {
+      "clean_trace": "robotsec_range/fixtures/robotprobe-v1-libero-realtrace/clean.jsonl",
+      "perturbed_trace": "robotsec_range/fixtures/robotprobe-v1-libero-realtrace/gripper_freeze_mid.jsonl",
+      "golden_summary": "robotsec_range/fixtures/robotprobe-v1-libero-realtrace/gripper_golden_summary.json"
+    }
+  }
+}

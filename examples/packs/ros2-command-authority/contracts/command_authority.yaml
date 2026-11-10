@@ -1,0 +1,11 @@
+id: ros2_command_authority_boundary
+type: temporal_contract
+window:
+  start_step: 0
+must_never:
+  field: command_authority.source
+  eq: bypass_proxy
+violation:
+  contract: ROS2CommandAuthorityContract
+  check: unauthorized_command_source
+  severity: 0.95

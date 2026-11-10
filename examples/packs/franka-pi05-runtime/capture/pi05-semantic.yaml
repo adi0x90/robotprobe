@@ -1,0 +1,24 @@
+format: robotprobe.runtime.capture_profile.v0
+id: pi05-semantic-default
+storage: summary
+max_bytes_per_run: 67108864
+every_n_policy_calls: 1
+max_module_calls: 16
+semantic_roles:
+  - vision.early
+  - vision.middle
+  - vision.late
+  - language.early
+  - language.middle
+  - language.late
+  - action_expert.early
+  - action_expert.middle
+  - action_expert.late
+  - action_input_projection
+  - time_mlp_input
+  - time_mlp_output
+  - action_output_projection
+user_selectors: []
+claim_boundary:
+  summaries_are_observational: true
+  no_causal_claims: true

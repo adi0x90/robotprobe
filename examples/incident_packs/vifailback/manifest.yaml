@@ -1,0 +1,18 @@
+id: robotprobe-incident-vifailback
+version: 0.1.0
+plugins:
+  - id: robotprobe.incident_datasets.vifailback
+    type: adapter
+    version: 0.1.0
+    entrypoint: robotprobe.integrations.incident_datasets.vifailback:convert_vifailback_annotations
+    files:
+      - docs/README.md
+    safety:
+      release_classification: trace_only
+      hardware_allowed: false
+    claims:
+      proves:
+        - converts selected ViFailback annotation records into RobotProbe incident traces
+      does_not_prove:
+        - hardware certification
+        - clean-vs-perturbed causal replay

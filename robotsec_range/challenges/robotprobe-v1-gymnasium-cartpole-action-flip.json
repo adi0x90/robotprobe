@@ -1,0 +1,19 @@
+{
+  "id": "robotprobe-v1-gymnasium-cartpole-action-flip",
+  "diagnosis": {
+    "layer": "action_postprocess",
+    "contract": "DiscreteActionContract",
+    "fault": "action_flip_discrete"
+  },
+  "required_evidence": {
+    "postprocessed_action_changed": true,
+    "raw_policy_action_changed": false
+  },
+  "metadata": {
+    "family": "Simulator Local Demo",
+    "release_classification": "sim_only",
+    "simulator": "Gymnasium",
+    "environment": "CartPole-v1",
+    "description": "CPU-only local simulator demo that flips a discrete action after policy output."
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "id": "robotprobe-v1-action-scale",
+  "diagnosis": {
+    "layer": "action_postprocess",
+    "contract": "ActionSpaceContract",
+    "fault": "action_scale_mismatch"
+  },
+  "required_evidence": {
+    "raw_policy_action_changed": false,
+    "postprocessed_action_changed": true,
+    "min_step_inflation": 1.2
+  },
+  "metadata": {
+    "fixture_refs": {
+      "golden_summary": "robotsec_range/fixtures/robotprobe-v1-action-scale/golden_summary.json",
+      "clean_trace": "robotsec_range/fixtures/robotprobe-v1-action-scale/clean.jsonl",
+      "perturbed_trace": "robotsec_range/fixtures/robotprobe-v1-action-scale/perturbed.jsonl"
+    }
+  }
+}

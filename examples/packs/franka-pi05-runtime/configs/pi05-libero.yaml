@@ -1,0 +1,53 @@
+format: robotprobe.runtime.run.v0
+pack: ..
+components:
+  policy:
+    plugin: robotprobe.policies.pi05_lerobot
+    options:
+      checkpoint: lerobot/pi05_libero_finetuned_v044
+      revision: dbf8a3f794a9c4297b44f40b752712f50073d945
+      tokenizer_checkpoint: google/paligemma-3b-pt-224
+      tokenizer_revision: 35e4f46485b4d07967e7e9935bc3786aad50687c
+      device: cuda
+      num_inference_steps: 10
+      n_action_steps: 10
+  embodiment:
+    plugin: robotprobe.embodiments.franka
+  backend:
+    plugin: robotprobe.backends.libero_franka
+    options:
+      suite: libero_spatial
+      task_id: 0
+      episode_length: 280
+      observation_height: 360
+      observation_width: 360
+      control_mode: relative
+  scenario:
+    plugin: robotprobe.scenarios.libero_task
+    options:
+      suite: libero_spatial
+      task_id: 0
+      seed: 7
+      max_steps: 280
+capture:
+  profile: ../capture/pi05-semantic.yaml
+  storage: summary
+execution:
+  mode: simulation
+  n_action_steps: 10
+  safety:
+    command_space: franka.cartesian_delta_gripper.v0
+    max_abs:
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+    max_observation_age_ms: 1000
+trace:
+  out: ../artifacts/pi05-libero.jsonl
+  run_id: runtime:pi05-libero
+  target: lerobot/pi05_libero_finetuned_v044
+  scenario: libero_spatial:task:0

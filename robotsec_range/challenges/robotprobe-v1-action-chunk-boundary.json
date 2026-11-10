@@ -1,0 +1,17 @@
+{
+  "id": "robotprobe-v1-action-chunk-boundary",
+  "diagnosis": {
+    "layer": "action_postprocess",
+    "contract": "ActionChunkContract",
+    "fault": "action_chunk_boundary_mismatch"
+  },
+  "required_evidence": {
+    "raw_policy_action_changed": false,
+    "postprocessed_action_changed": true
+  },
+  "metadata": {
+    "fixture_refs": {
+      "golden_summary": "robotsec_range/fixtures/robotprobe-v1-action-chunk-boundary/golden_summary.json"
+    }
+  }
+}

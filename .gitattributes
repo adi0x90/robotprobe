@@ -1,0 +1,18 @@
+* text=auto eol=lf
+
+*.py text
+*.md text
+*.json text
+*.jsonl text
+*.yaml text
+*.yml text
+*.sh text eol=lf
+
+*.mcap binary
+*.safetensors binary
+*.npy binary
+*.png binary
+*.jpg binary
+*.gif binary
+
+uv.lock text eol=lf

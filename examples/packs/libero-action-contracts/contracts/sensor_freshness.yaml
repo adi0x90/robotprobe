@@ -1,0 +1,12 @@
+id: libero_sensor_freshness
+type: temporal_contract
+window:
+  start_step: 20
+  end_step: 80
+must_never:
+  field: observation_replayed
+  eq: true
+violation:
+  contract: SensorFreshnessContract
+  check: repeated_camera_observation_inside_policy_window
+  severity: 0.8

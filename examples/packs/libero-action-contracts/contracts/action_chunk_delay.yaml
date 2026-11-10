@@ -1,0 +1,11 @@
+id: libero_action_chunk_delay
+type: temporal_contract
+window:
+  start_step: 0
+must_never:
+  field: action_chunk_boundary_mismatch
+  eq: true
+violation:
+  contract: ActionChunkContract
+  check: delayed_or_shifted_action_chunk
+  severity: 0.82

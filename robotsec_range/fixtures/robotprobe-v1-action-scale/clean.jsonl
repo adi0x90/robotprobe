@@ -1,0 +1,3 @@
+{"event_type":"raw_action","layer":"policy_forward","replay_level":"L0_TRACE_PLAYBACK","run_id":"fixture_clean_action_scale","scenario":"clean","step":10,"target":"fixture-vla","value":[0.1,0.2,0.3]}
+{"event_type":"postprocessed_action","layer":"action_postprocess","replay_level":"L0_TRACE_PLAYBACK","run_id":"fixture_clean_action_scale","scenario":"clean","step":10,"target":"fixture-vla","value":[0.1,0.2,0.3]}
+{"event_type":"outcome","layer":"outcome","replay_level":"L0_TRACE_PLAYBACK","run_id":"fixture_clean_action_scale","scenario":"clean","step":100,"success":true,"target":"fixture-vla","steps":100}

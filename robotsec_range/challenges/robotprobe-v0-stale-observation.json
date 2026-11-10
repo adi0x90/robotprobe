@@ -1,0 +1,11 @@
+{
+  "id": "robotprobe-v0-stale-observation",
+  "diagnosis": {
+    "layer": "observation",
+    "contract": "SensorFreshnessContract",
+    "fault": "stale_observation_replay"
+  },
+  "required_evidence": {
+    "observation_replayed": true
+  }
+}

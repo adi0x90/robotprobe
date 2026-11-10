@@ -1,0 +1,11 @@
+{
+  "id": "robotprobe-v0-instruction-swap",
+  "diagnosis": {
+    "layer": "instruction",
+    "contract": "InstructionIntentContract",
+    "fault": "instruction_swap"
+  },
+  "required_evidence": {
+    "instruction_changed": true
+  }
+}

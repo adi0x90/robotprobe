@@ -1,0 +1,9 @@
+{"event_type":"raw_action","layer":"policy_forward","replay_level":"L0_TRACE_PLAYBACK","run_id":"quickstart_clean","scenario":"clean","step":35,"target":"quickstart-vla","value":[0.10,0.00,0.30,1.00]}
+{"event_type":"postprocessed_action","layer":"action_postprocess","replay_level":"L0_TRACE_PLAYBACK","run_id":"quickstart_clean","scenario":"clean","step":35,"target":"quickstart-vla","value":[0.10,0.00,0.30,1.00]}
+{"event_type":"raw_action","layer":"policy_forward","replay_level":"L0_TRACE_PLAYBACK","run_id":"quickstart_clean","scenario":"clean","step":36,"target":"quickstart-vla","value":[0.12,0.02,0.28,1.00]}
+{"event_type":"postprocessed_action","layer":"action_postprocess","replay_level":"L0_TRACE_PLAYBACK","run_id":"quickstart_clean","scenario":"clean","step":36,"target":"quickstart-vla","value":[0.12,0.02,0.28,1.00]}
+{"event_type":"raw_action","layer":"policy_forward","replay_level":"L0_TRACE_PLAYBACK","run_id":"quickstart_clean","scenario":"clean","step":37,"target":"quickstart-vla","value":[0.14,0.04,0.24,0.00]}
+{"event_type":"postprocessed_action","layer":"action_postprocess","replay_level":"L0_TRACE_PLAYBACK","run_id":"quickstart_clean","scenario":"clean","step":37,"target":"quickstart-vla","value":[0.14,0.04,0.24,0.00]}
+{"event_type":"raw_action","layer":"policy_forward","replay_level":"L0_TRACE_PLAYBACK","run_id":"quickstart_clean","scenario":"clean","step":38,"target":"quickstart-vla","value":[0.08,0.01,0.18,0.00]}
+{"event_type":"postprocessed_action","layer":"action_postprocess","replay_level":"L0_TRACE_PLAYBACK","run_id":"quickstart_clean","scenario":"clean","step":38,"target":"quickstart-vla","value":[0.08,0.01,0.18,0.00]}
+{"event_type":"outcome","layer":"outcome","replay_level":"L0_TRACE_PLAYBACK","run_id":"quickstart_clean","scenario":"clean","step":80,"success":true,"target":"quickstart-vla","steps":80}

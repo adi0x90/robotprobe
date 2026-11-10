@@ -1,0 +1,108 @@
+format: robotprobe.runtime.run.v0
+pack: ..
+components:
+  policy:
+    plugin: robotprobe.policies.franka_deterministic
+    options:
+      step_size: 0.02
+      action_horizon: 2
+      gripper_command: 1.0
+  embodiment:
+    plugin: robotprobe.embodiments.franka
+  backend:
+    plugin: robotprobe.backends.franka_recorded_replay
+    options:
+      fixture_provenance: synthetic_recorded_format
+      snapshots:
+        - image_specs:
+            agent:
+              shape:
+                - 2
+                - 2
+                - 3
+              fill: 0
+            wrist:
+              shape:
+                - 2
+                - 2
+                - 3
+              fill: 16
+          eef_position:
+            - 0.4
+            - 0.0
+            - 0.3
+          eef_quaternion:
+            - 0.0
+            - 0.0
+            - 0.0
+            - 1.0
+          gripper_qpos:
+            - 0.02
+            - 0.02
+          joint_positions:
+            - 0.0
+            - 0.0
+            - 0.0
+            - 0.0
+            - 0.0
+            - 0.0
+            - 0.0
+          joint_velocities:
+            - 0.0
+            - 0.0
+            - 0.0
+            - 0.0
+            - 0.0
+            - 0.0
+            - 0.0
+          joint_efforts:
+            - 0.0
+            - 0.0
+            - 0.0
+            - 0.0
+            - 0.0
+            - 0.0
+            - 0.0
+  scenario:
+    plugin: robotprobe.scenarios.franka_deterministic_reach
+    options:
+      scenario_id: recorded-replay-franka-reach
+      instruction: Evaluate a Franka reach proposal against a read-only snapshot.
+      seed: 7
+      max_steps: 3
+      initial_position:
+        - 0.4
+        - 0.0
+        - 0.3
+      target_position:
+        - 0.5
+        - 0.0
+        - 0.3
+      tolerance: 0.00000001
+execution:
+  mode: simulation
+  n_action_steps: 1
+  safety:
+    command_space: franka.cartesian_delta_gripper.v0
+    max_abs:
+      - 0.05
+      - 0.05
+      - 0.05
+      - 0.2
+      - 0.2
+      - 0.2
+      - 1.0
+    workspace_min:
+      - 0.2
+      - -0.5
+      - 0.1
+    workspace_max:
+      - 0.7
+      - 0.5
+      - 0.8
+    max_observation_age_ms: 1000
+trace:
+  out: ../artifacts/franka-recorded-replay.jsonl
+  run_id: runtime:franka-recorded-replay
+  target: deterministic-franka-policy
+  scenario: recorded-replay-franka-reach

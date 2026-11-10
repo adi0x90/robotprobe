@@ -1,0 +1,23 @@
+{
+  "evidence": {
+    "first_divergence_step": 0,
+    "instruction_changed": true,
+    "observation_replayed": false,
+    "outcome_delta": {
+      "step_inflation": 0.9634146341463414,
+      "success_changed": false
+    },
+    "postprocessed_action_changed": true,
+    "postprocessed_action_drift_vs_clean": true,
+    "raw_policy_action_changed": true,
+    "raw_policy_drift_vs_clean": true
+  },
+  "replay_level": "L0_TRACE_PLAYBACK",
+  "root_cause_hypothesis": {
+    "contract": "InstructionIntentContract",
+    "declared_layer": "instruction",
+    "fault": "instruction_swap",
+    "layer": "instruction",
+    "rule_match_score": 0.87
+  }
+}

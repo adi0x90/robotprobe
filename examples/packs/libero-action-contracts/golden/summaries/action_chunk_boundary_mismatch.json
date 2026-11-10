@@ -1,0 +1,23 @@
+{
+  "evidence": {
+    "first_divergence_step": 32,
+    "instruction_changed": false,
+    "observation_replayed": false,
+    "outcome_delta": {
+      "step_inflation": 1.25,
+      "success_changed": false
+    },
+    "postprocessed_action_changed": true,
+    "postprocessed_action_drift_vs_clean": true,
+    "raw_policy_action_changed": false,
+    "raw_policy_drift_vs_clean": false
+  },
+  "replay_level": "L0_TRACE_PLAYBACK",
+  "root_cause_hypothesis": {
+    "contract": "ActionChunkContract",
+    "declared_layer": "action_postprocess",
+    "fault": "action_chunk_boundary_mismatch",
+    "layer": "action_postprocess",
+    "rule_match_score": 0.87
+  }
+}

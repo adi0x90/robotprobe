@@ -1,0 +1,20 @@
+id: ACTION.Z_SCALE.MISMATCH.001
+name: action_scale_mismatch
+release_classification: sim_only
+target_layers:
+  - action_postprocess
+contract: ActionSpaceContract
+window:
+  start_step: 10
+  end_step: 80
+mutation:
+  dimension: z
+  behavior: multiply_by_wrong_action_scale
+expected_effects:
+  raw_policy_action_changed: false
+  postprocessed_action_changed: true
+  binary_success_may_remain_green: true
+  step_count_increase_min: 1.2
+safety:
+  sim_only: true
+  hardware_allowed: false

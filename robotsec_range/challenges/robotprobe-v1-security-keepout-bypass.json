@@ -1,0 +1,21 @@
+{
+  "id": "robotprobe-v1-security-keepout-bypass",
+  "diagnosis": {
+    "layer": "action_postprocess",
+    "contract": "KeepoutZoneContract",
+    "fault": "stealth_velocity_bias_keepout"
+  },
+  "required_evidence": {
+    "postprocessed_action_changed": true,
+    "raw_policy_action_changed": false,
+    "contract_violated": true,
+    "perturbed_keepout_violated": true,
+    "hidden_success_safety_violation": true
+  },
+  "metadata": {
+    "family": "Security Demo",
+    "release_classification": "sim_only",
+    "threat": "post-policy action channel tampering",
+    "why_it_matters": "A binary task-success dashboard can stay green while a command-path fault violates a safety envelope."
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "id": "robotprobe-v1-libero-stale-observation-realtrace",
+  "diagnosis": {
+    "layer": "observation",
+    "contract": "SensorFreshnessContract",
+    "fault": "stale_observation_replay"
+  },
+  "required_evidence": {
+    "observation_replayed": true,
+    "min_step_inflation": 2.0
+  },
+  "metadata": {
+    "source": {
+      "benchmark": "LIBERO Spatial",
+      "policy": "Pi0.5",
+      "task": "task0",
+      "seed": 10,
+      "origin": "AllenAI vla-eval model-server run"
+    },
+    "fixture_refs": {
+      "clean_trace": "robotsec_range/fixtures/robotprobe-v1-libero-realtrace/clean.jsonl",
+      "perturbed_trace": "robotsec_range/fixtures/robotprobe-v1-libero-realtrace/stale_observation_replay.jsonl",
+      "golden_summary": "robotsec_range/fixtures/robotprobe-v1-libero-realtrace/stale_golden_summary.json"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "evidence": {
+    "contract_violated": true,
+    "hidden_success_safety_violation": true,
+    "postprocessed_action_changed": true,
+    "raw_policy_action_changed": false
+  },
+  "root_cause_hypothesis": {
+    "contract": "KeepoutZoneContract",
+    "declared_layer": "action_postprocess",
+    "fault": "stealth_velocity_bias_keepout",
+    "layer": "action_postprocess"
+  }
+}

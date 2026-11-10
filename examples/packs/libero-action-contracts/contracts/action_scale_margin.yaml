@@ -1,0 +1,11 @@
+id: libero_action_scale_margin
+type: temporal_contract
+window:
+  start_step: 0
+must_never:
+  field: action_scale_contract_violation
+  eq: true
+violation:
+  contract: ActionSpaceContract
+  check: action_scale_outside_expected_margin
+  severity: 0.9

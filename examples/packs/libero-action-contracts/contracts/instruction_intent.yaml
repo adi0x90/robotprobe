@@ -1,0 +1,11 @@
+id: libero_instruction_intent
+type: temporal_contract
+window:
+  start_step: 0
+must_never:
+  field: instruction_changed
+  eq: true
+violation:
+  contract: InstructionIntentContract
+  check: counterfactual_instruction_inside_episode
+  severity: 0.78

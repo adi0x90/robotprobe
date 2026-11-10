@@ -1,0 +1,10 @@
+{
+  "id": "action-envelope-sweep",
+  "baseline": "baseline.jsonl",
+  "metrics": ["trajectory_deviation", "action_energy"],
+  "contracts": ["contracts/action_envelope.yaml"],
+  "faults": [
+    {"name": "benign_scale_down", "channel": "action", "mode": "scale_dims", "dims": [0, 1, 2], "scale": 0.5},
+    {"name": "saturate_x", "channel": "action", "mode": "set_dims", "dims": [0], "value": 5.0, "start": 2, "end": 6}
+  ]
+}

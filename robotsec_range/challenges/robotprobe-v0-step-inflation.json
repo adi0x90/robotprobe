@@ -1,0 +1,7 @@
+{
+  "id": "robotprobe-v0-step-inflation",
+  "diagnosis": {},
+  "required_evidence": {
+    "min_step_inflation": 1.5
+  }
+}

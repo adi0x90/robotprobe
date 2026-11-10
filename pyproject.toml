@@ -1,0 +1,103 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "robotprobe"
+version = "0.2.0a0"
+description = "Incident-forensics and causal-diff tooling for robot and VLA stacks."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [{ name = "Aditya Gupta" }]
+keywords = [
+  "robotics",
+  "vla",
+  "incident-response",
+  "fault-injection",
+  "observability",
+  "mcap",
+  "evaluation",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering",
+  "Topic :: System :: Monitoring",
+]
+dependencies = [
+  "mcap>=1.3",
+  "numpy>=1.23",
+  "PyYAML>=6.0",
+  "safetensors>=0.4",
+]
+
+[project.urls]
+Homepage = "https://github.com/adi0x90/robotprobe"
+Repository = "https://github.com/adi0x90/robotprobe"
+Issues = "https://github.com/adi0x90/robotprobe/issues"
+
+[project.optional-dependencies]
+ros2-decoders = [
+  # Pure-Python ros2msg/CDR decoding for ROS 2 MCAP logs. No ROS install required.
+  "mcap-ros2-support>=0.5",
+]
+simulators = [
+  "gymnasium[classic-control]>=0.29",
+]
+mujoco = [
+  "mujoco>=3.0",
+  "dm_control>=1.0",
+]
+pybullet = [
+  "pybullet>=3.2",
+]
+incident-datasets = [
+  "huggingface_hub>=0.23",
+  "h5py>=3.10",
+]
+nnsight = [
+  "nnsight>=0.4",
+  "torch>=2.2",
+]
+
+[dependency-groups]
+# Dev tooling lives in a PEP 735 dependency-group, not a published extra,
+# so the library's pip-installable extras stay consumer-facing. uv installs this by default.
+dev = [
+  "pytest>=8",
+  "ruff>=0.6",
+  # The ROS 2 CDR tests import mcap_ros2 directly, so the dev environment needs it.
+  "mcap-ros2-support>=0.5",
+]
+
+[project.scripts]
+robotprobe = "robotprobe.__main__:main"
+robotsec-range = "robotsec_range.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["robotprobe*", "robotsec_range*"]
+
+[tool.setuptools.package-data]
+robotprobe = ["data/demo/*"]
+robotsec_range = ["challenges/*.json", "fixtures/**/*.json", "fixtures/**/*.jsonl"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+# All real tests are unittest.TestCase classes (collected via pytest's unittest
+# integration). Disable bare-function collection so helpers like the test_pack()
+# entrypoint imported from robotprobe.packs are not mistaken for test functions.
+python_functions = ["_disabled_function_collection_"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"

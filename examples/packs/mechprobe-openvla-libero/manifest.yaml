@@ -1,0 +1,49 @@
+id: robotprobe-pack-mechprobe-openvla-libero
+version: 0.1.0
+trust_level: trusted_core_pack
+publisher:
+  name: robotprobe
+  url: https://github.com/adi0x90/robotprobe
+compatibility:
+  robotprobe_min: 0.2.0
+  schema_version: robotprobe.pack.v0.2
+execution:
+  imports_code_during_validate: false
+  imports_code_during_test: true
+  network_access_required: false
+plugins:
+  - id: robotprobe.mech.adapters.openvla_activation
+    type: adapter
+    version: 0.1.0
+    entrypoint: adapters.openvla_activation_adapter:OpenVLAActivationAdapter
+    capabilities:
+      format: robotprobe.mech.adapter_capabilities.v0
+      adapter_id: openvla-libero-whitebox
+      model_family: openvla
+      runtime: torch
+      supports_activation_capture: false
+      supports_temporal_patch: false
+      supports_action_head: false
+      supports_uncertainty: false
+      supports_policy_replay: false
+      supports_sim_replay: false
+      supports_hardware_shadow: false
+      requires_white_box_model: true
+      imports_heavy_runtime: false
+      safe_default_mode: offline_only
+    files:
+      - adapters/openvla_activation_adapter.py
+      - capture/layer18_instruction_swap.yaml
+      - docs/README.md
+    safety:
+      release_classification: sim_only
+      hardware_allowed: false
+    claims:
+      proves:
+        - declares a pack-local MechProbe activation capture contract for OpenVLA/LIBERO-style white-box runs
+        - keeps model-specific activation hooks outside RobotProbe core
+      does_not_prove:
+        - live OpenVLA activation capture
+        - that SAE labels are true
+        - that internal features are causal
+        - robot safety in hardware

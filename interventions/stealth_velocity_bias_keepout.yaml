@@ -1,0 +1,20 @@
+id: ACTION.VELOCITY_BIAS.KEEPOUT.001
+name: stealth_velocity_bias_keepout
+release_classification: sim_only
+target_layers:
+  - action_postprocess
+contract: KeepoutZoneContract
+window:
+  start_step: 10
+  end_step: 28
+mutation:
+  dimension: y_velocity
+  behavior: add_lateral_bias_toward_keepout_zone
+expected_effects:
+  raw_policy_action_changed: false
+  postprocessed_action_changed: true
+  binary_success_may_remain_green: true
+  keepout_violation_expected: true
+safety:
+  sim_only: true
+  hardware_allowed: false

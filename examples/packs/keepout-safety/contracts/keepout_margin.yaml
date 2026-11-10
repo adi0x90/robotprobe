@@ -1,0 +1,12 @@
+id: keepout_margin_violation
+type: threshold_contract
+when:
+  field: keepout_violated
+  eq: true
+require:
+  field: keepout_violated
+  eq: false
+violation:
+  contract: KeepoutZoneContract
+  check: recorded_keepout_violation
+  severity: 0.9

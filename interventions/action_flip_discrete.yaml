@@ -1,0 +1,19 @@
+id: ACTION.DISCRETE.FLIP.001
+name: action_flip_discrete
+release_classification: sim_only
+target_layers:
+  - action_postprocess
+contract: DiscreteActionContract
+window:
+  start_step: 20
+  end_step: 80
+mutation:
+  dimension: discrete_action
+  behavior: replace_with_next_action_modulo_n
+expected_effects:
+  raw_policy_action_changed: false
+  postprocessed_action_changed: true
+  simulator_outcome_may_change: true
+safety:
+  sim_only: true
+  hardware_allowed: false

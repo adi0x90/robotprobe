@@ -1,0 +1,25 @@
+{
+  "id": "robotprobe-v2-imagined-evidence-integrity",
+  "diagnosis": {
+    "layer": "imagined_evidence",
+    "contract": "ImaginedEvidenceIntegrityContract",
+    "fault": "world_model_output_shift"
+  },
+  "required_evidence": {
+    "world_model_output_changed": true,
+    "plausibility_preserved": true,
+    "consistency_degraded": true,
+    "downstream_decision_flipped": true
+  },
+  "metadata": {
+    "status": "experimental",
+    "release_classification": "sim_only",
+    "family": "Imagined-Evidence Integrity",
+    "hook_points": [
+      "on_subgoal_request",
+      "on_world_model_output"
+    ],
+    "description": "Detect plausible but unfaithful generated subgoal / imagined-view evidence before it conditions a downstream policy or reasoner.",
+    "signal_question": "Can a plausible-but-unfaithful generated view flip a downstream decision more often than a random plausible perturbation?"
+  }
+}

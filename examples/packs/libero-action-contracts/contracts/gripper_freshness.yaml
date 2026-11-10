@@ -1,0 +1,12 @@
+id: libero_gripper_command_freshness
+type: temporal_contract
+window:
+  start_step: 35
+  end_step: 120
+must_never:
+  field: gripper_command_stale
+  eq: true
+violation:
+  contract: ActionSpaceContract
+  check: gripper_command_stale_inside_action_window
+  severity: 0.86

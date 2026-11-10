@@ -1,0 +1,19 @@
+id: SENSOR.STALE_OBSERVATION.REPLAY.001
+name: stale_observation_replay
+release_classification: sim_only
+target_layers:
+  - observation
+contract: SensorFreshnessContract
+window:
+  start_step: 20
+  end_step: 80
+mutation:
+  modality: primary_camera
+  behavior: replay_previous_frame
+expected_effects:
+  observation_changed: true
+  raw_policy_action_may_change: true
+  first_divergence_after_start: true
+safety:
+  sim_only: true
+  hardware_allowed: false

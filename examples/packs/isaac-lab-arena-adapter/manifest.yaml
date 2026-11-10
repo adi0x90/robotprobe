@@ -1,0 +1,18 @@
+id: robotprobe-pack-isaac-lab-arena-adapter
+version: 0.1.0
+plugins:
+  - id: robotprobe.adapters.isaac_lab_arena
+    type: adapter
+    version: 0.1.0
+    entrypoint: robotprobe.integrations.isaac_lab_arena.trace_ingest:ingest_isaac_lab_arena_trace
+    files:
+      - adapters/isaac_lab_arena.md
+    safety:
+      release_classification: sim_only
+      hardware_allowed: false
+    claims:
+      proves:
+        - defines a simulator-only Isaac Lab-Arena adapter pack scaffold
+      does_not_prove:
+        - hardware certification
+        - Isaac Sim runtime availability or physical robot safety
