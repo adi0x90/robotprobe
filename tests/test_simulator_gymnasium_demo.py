@@ -82,6 +82,14 @@ class SimulatorGymnasiumDemoTests(unittest.TestCase):
             )
 
             summary = summarize_trace_pair(clean, perturbed, intervention_manifest_ref=manifest)
+            challenge = load_builtin_challenge("robotprobe-v1-gymnasium-cartpole-action-flip")
+            check_result = check_summary(
+                challenge,
+                summary,
+                clean_trace=clean,
+                perturbed_trace=perturbed,
+                intervention_manifest_ref=manifest,
+            )
 
         self.assertEqual(summary["root_cause_hypothesis"]["layer"], "action_postprocess")
         self.assertEqual(summary["root_cause_hypothesis"]["contract"], "DiscreteActionContract")
@@ -89,8 +97,7 @@ class SimulatorGymnasiumDemoTests(unittest.TestCase):
         self.assertFalse(summary["evidence"]["raw_policy_action_changed"])
         self.assertTrue(summary["evidence"]["postprocessed_action_changed"])
         self.assertEqual(summary["evidence"]["first_divergence_step"], 2)
-        challenge = load_builtin_challenge("robotprobe-v1-gymnasium-cartpole-action-flip")
-        self.assertTrue(check_summary(challenge, summary).passed)
+        self.assertTrue(check_result.passed)
 
 
 if __name__ == "__main__":

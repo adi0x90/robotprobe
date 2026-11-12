@@ -82,7 +82,9 @@ class RobotProbeCoreTests(unittest.TestCase):
             self.assertEqual(events[0]["baseline_run_id"], "rp_run_clean_001")
             self.assertEqual(events[0]["perturbation_group_id"], "rp_pair_gripper_001")
             self.assertEqual(events[0]["intervention_manifest_ref"], str(manifest_ref))
-            self.assertEqual(events[0]["intervention_manifest_hash"], load_intervention_manifest(manifest_ref).digest)
+            self.assertEqual(
+                events[0]["intervention_manifest_hash"], load_intervention_manifest(manifest_ref).digest
+            )
             self.assertNotIn("expected_layer_of_effect", events[0])
             self.assertNotIn("expected_downstream_layers", events[0])
             self.assertEqual(events[1]["event_type"], "contract_check")
@@ -266,21 +268,17 @@ class RobotProbeCoreTests(unittest.TestCase):
                 "min_step_inflation": 1.5,
             },
         )
-        summary = {
-            "root_cause_hypothesis": {
-                "layer": "action_postprocess",
-                "contract": "ActionSpaceContract",
-                "fault": "gripper_freeze_mid",
-                "rule_match_score": 0.87,
-            },
-            "evidence": {
-                "raw_policy_action_changed": False,
-                "postprocessed_action_changed": True,
-                "outcome_delta": {"step_inflation": 1.99},
-            },
-        }
-
-        result = check_summary(challenge, summary)
+        manifest_ref = ROOT / "interventions" / "gripper_freeze_mid.yaml"
+        with tempfile.TemporaryDirectory() as td:
+            clean_path, perturbed_path = self._write_gripper_trace_pair(Path(td), manifest_ref)
+            summary = summarize_trace_pair(clean_path, perturbed_path, intervention_manifest_ref=manifest_ref)
+            result = check_summary(
+                challenge,
+                summary,
+                clean_trace=clean_path,
+                perturbed_trace=perturbed_path,
+                intervention_manifest_ref=manifest_ref,
+            )
 
         self.assertTrue(result.passed)
         self.assertEqual(result.diagnosis["contract"], "ActionSpaceContract")
@@ -328,22 +326,12 @@ class RobotProbeCoreTests(unittest.TestCase):
                 "min_step_inflation": 1.5,
             },
         }
-        summary = {
-            "root_cause_hypothesis": {
-                "layer": "action_postprocess",
-                "contract": "ActionSpaceContract",
-                "fault": "gripper_freeze_mid",
-                "rule_match_score": 0.87,
-            },
-            "evidence": {
-                "raw_policy_action_changed": False,
-                "postprocessed_action_changed": True,
-                "outcome_delta": {"step_inflation": 1.99},
-            },
-        }
+        manifest_ref = ROOT / "interventions" / "gripper_freeze_mid.yaml"
         with tempfile.TemporaryDirectory() as td:
             challenge_path = Path(td) / "challenge.json"
             summary_path = Path(td) / "summary.json"
+            clean_path, perturbed_path = self._write_gripper_trace_pair(Path(td), manifest_ref)
+            summary = summarize_trace_pair(clean_path, perturbed_path, intervention_manifest_ref=manifest_ref)
             challenge_path.write_text(json.dumps(challenge), encoding="utf-8")
             summary_path.write_text(json.dumps(summary), encoding="utf-8")
 
@@ -357,6 +345,12 @@ class RobotProbeCoreTests(unittest.TestCase):
                     str(challenge_path),
                     "--summary",
                     str(summary_path),
+                    "--clean-trace",
+                    str(clean_path),
+                    "--perturbed-trace",
+                    str(perturbed_path),
+                    "--manifest",
+                    str(manifest_ref),
                 ],
                 cwd=ROOT,
                 text=True,
