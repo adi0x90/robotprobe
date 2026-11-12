@@ -59,7 +59,14 @@ def create_incident_bundle(
     check_data = None
     if challenge is not None:
         challenge_spec = _load_challenge(challenge)
-        check = check_summary(challenge_spec, summary)
+        check = check_summary(
+            challenge_spec,
+            summary,
+            clean_trace=clean_ref,
+            perturbed_trace=perturbed_ref,
+            intervention_manifest_ref=manifest_ref,
+            metrics=metrics,
+        )
         check_data = {
             "passed": check.passed,
             "diagnosis": check.diagnosis,

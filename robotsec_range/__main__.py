@@ -18,8 +18,13 @@ def main(argv: list[str] | None = None) -> int:
     check = sub.add_parser("check", help="Validate a causal summary against a challenge.")
     check.add_argument("--challenge", required=True)
     check.add_argument("--summary", required=True)
+    check.add_argument("--clean-trace")
+    check.add_argument("--perturbed-trace")
+    check.add_argument("--manifest", dest="intervention_manifest_ref")
 
-    check_mech = sub.add_parser("check-mech", help="Validate a MechProbe report against a mech-forensics challenge.")
+    check_mech = sub.add_parser(
+        "check-mech", help="Validate a MechProbe report against a mech-forensics challenge."
+    )
     check_mech.add_argument("--challenge", required=True)
     check_mech.add_argument("--report", required=True)
 
@@ -29,25 +34,37 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "check":
         challenge_data = _load_challenge(args.challenge)
         summary = _load_json(args.summary)
-        challenge = (challenge_data if isinstance(challenge_data, ChallengeSpec)
-                     else ChallengeSpec(
-                         id=challenge_data["id"],
-                         diagnosis=challenge_data["diagnosis"],
-                         required_evidence=challenge_data.get("required_evidence", {}),
-                     ))
-        result = check_summary(challenge, summary)
+        challenge = (
+            challenge_data
+            if isinstance(challenge_data, ChallengeSpec)
+            else ChallengeSpec(
+                id=challenge_data["id"],
+                diagnosis=challenge_data["diagnosis"],
+                required_evidence=challenge_data.get("required_evidence", {}),
+            )
+        )
+        result = check_summary(
+            challenge,
+            summary,
+            clean_trace=args.clean_trace,
+            perturbed_trace=args.perturbed_trace,
+            intervention_manifest_ref=args.intervention_manifest_ref,
+        )
         json.dump(dataclasses.asdict(result), sys.stdout, indent=2, sort_keys=True)
         sys.stdout.write("\n")
         return 0 if result.passed else 1
     if args.command == "check-mech":
         challenge_data = _load_challenge(args.challenge)
         report = _load_json(args.report)
-        challenge = (challenge_data if isinstance(challenge_data, ChallengeSpec)
-                     else ChallengeSpec(
-                         id=challenge_data["id"],
-                         diagnosis=challenge_data.get("diagnosis", {}),
-                         required_evidence=challenge_data.get("required_evidence", {}),
-                     ))
+        challenge = (
+            challenge_data
+            if isinstance(challenge_data, ChallengeSpec)
+            else ChallengeSpec(
+                id=challenge_data["id"],
+                diagnosis=challenge_data.get("diagnosis", {}),
+                required_evidence=challenge_data.get("required_evidence", {}),
+            )
+        )
         result = check_mech_report(challenge, report)
         json.dump(dataclasses.asdict(result), sys.stdout, indent=2, sort_keys=True)
         sys.stdout.write("\n")

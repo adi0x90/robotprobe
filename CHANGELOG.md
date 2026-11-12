@@ -42,6 +42,10 @@ Notable changes to RobotProbe. The project follows a loose
 
 ### Changed
 
+- RobotSec challenge checks validate both traces and independently recompute the summary and required
+  metrics before awarding a pass. Supplied summaries must agree with the recomputed evidence;
+  missing trace evidence fails closed unless packaged challenge fixtures provide it. This establishes
+  consistency with the traces, not their authenticity.
 - Documentation is consolidated from 29 pages into 12, grouped by task: getting started, concepts,
   CLI, packs, integrations, runtime, Franka, MechProbe, experimental features, status and claims,
   safety, and the failure-semantics spec. Development setup moved into `CONTRIBUTING.md`.

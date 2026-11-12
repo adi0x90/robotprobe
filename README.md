@@ -93,7 +93,7 @@ commands below that reference `examples/` or `scripts/`.
 | --- | --- |
 | Diagnose a regression | `robotprobe summarize --clean ... --perturbed ... --manifest ...` |
 | Check a trace | `robotprobe validate-trace trace.jsonl` |
-| Score a diagnosis against a challenge | `robotsec-range check --challenge ... --summary ...` |
+| Score a diagnosis against a challenge | `robotsec-range check --challenge ... --summary ... --clean-trace ... --perturbed-trace ...` |
 | Run a fault campaign over a baseline | `robotprobe campaign run --campaign ... --out ...` |
 | Author a reusable pack | `robotprobe pack init /tmp/my-pack --template ros2-command-authority` |
 | Move evidence into MCAP and back | `robotprobe export mcap` / `robotprobe import mcap` |

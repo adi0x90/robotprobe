@@ -53,9 +53,19 @@ robotprobe bundle \
 
 ```bash
 robotsec-range list-challenges
-robotsec-range check --challenge robotprobe-v0-gripper-freeze --summary results/summary.json
+robotsec-range check \
+  --challenge robotprobe-v0-gripper-freeze \
+  --summary results/summary.json \
+  --clean-trace traces/clean.jsonl \
+  --perturbed-trace traces/gripper_freeze.jsonl \
+  --manifest interventions/gripper_freeze_mid.yaml
 robotsec-range check-mech --challenge robotprobe-mech-v0-instruction-internal-leadtime --report mech_report.json
 ```
+
+`check` validates both traces and independently recomputes the summary and required metrics before
+awarding a pass. The supplied summary must agree with that recomputation. Custom challenges require
+both trace options; built-in challenges may resolve packaged fixture traces automatically. This
+proves consistency with the supplied evidence, not the evidence's authenticity.
 
 ## Contracts
 

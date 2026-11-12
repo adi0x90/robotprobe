@@ -53,7 +53,9 @@ class SecurityKeepoutDemoTests(unittest.TestCase):
             )
             self.assertEqual(events, [json.loads(line) for line in replayed.read_text().splitlines()])
             conformance = check_conformance_file(trace)
-            seed_check = next(check for check in conformance.checks if check.requirement == "run_seed_present")
+            seed_check = next(
+                check for check in conformance.checks if check.requirement == "run_seed_present"
+            )
             self.assertTrue(seed_check.passed)
 
     def test_keepout_bias_attack_succeeds_but_violates_contract(self):
@@ -84,8 +86,18 @@ class SecurityKeepoutDemoTests(unittest.TestCase):
             )
 
             summary = summarize_trace_pair(clean, perturbed, intervention_manifest_ref=manifest)
+            challenge = load_builtin_challenge("robotprobe-v1-security-keepout-bypass")
+            check_result = check_summary(
+                challenge,
+                summary,
+                clean_trace=clean,
+                perturbed_trace=perturbed,
+                intervention_manifest_ref=manifest,
+            )
             self.assertTrue(check_conformance_file(clean, target_level="L1_REPRODUCIBLE_INCIDENT").conformant)
-            self.assertTrue(check_conformance_file(perturbed, target_level="L2_CONTRACT_CHECKABLE").conformant)
+            self.assertTrue(
+                check_conformance_file(perturbed, target_level="L2_CONTRACT_CHECKABLE").conformant
+            )
 
         self.assertTrue(clean_result["success"])
         self.assertTrue(perturbed_result["success"])
@@ -100,8 +112,7 @@ class SecurityKeepoutDemoTests(unittest.TestCase):
         self.assertEqual(summary["root_cause_hypothesis"]["contract"], "KeepoutZoneContract")
         self.assertEqual(summary["root_cause_hypothesis"]["fault"], "stealth_velocity_bias_keepout")
 
-        challenge = load_builtin_challenge("robotprobe-v1-security-keepout-bypass")
-        self.assertTrue(check_summary(challenge, summary).passed)
+        self.assertTrue(check_result.passed)
 
 
 if __name__ == "__main__":
