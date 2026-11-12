@@ -356,9 +356,9 @@ RobotProbe uses "L0–L3" for **two unrelated** taxonomies. Always write the ful
   comparisons (`lt`/`gt`/`eq`/...) and temporal rules (`must_never` / `must_always` /
   `must_eventually`) over step windows; violations are surfaced as `contract_check` events.
 - **Challenge** — a `ChallengeSpec` (`robotsec_range/challenge_spec.py`): an `id`, a
-  `diagnosis`, and `required_evidence`, checked against a summary by
-  `robotsec_range/checker.py` to produce a bundle's `check.json`. Built-ins are listed with
-  `robotsec-range list-challenges`.
+  `diagnosis`, and `required_evidence`. `robotsec_range/checker.py` validates the traces,
+  independently recomputes the summary and metrics, and rejects disagreements before producing a
+  bundle's `check.json`. Built-ins are listed with `robotsec-range list-challenges`.
 - **Pack** — an installable plugin directory (validated by `robotprobe/packs.py`) with a plugin
   manifest plus contracts, adapters, and challenges; `robotprobe pack` scaffolds templates such
   as `ros2-command-authority` and `vla-eval-adapter`.

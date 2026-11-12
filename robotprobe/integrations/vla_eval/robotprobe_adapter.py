@@ -196,7 +196,14 @@ class RobotProbeVlaEvalRunner:
         check_path = None
         check_data = None
         if self.config.challenge is not None:
-            check = check_summary(load_builtin_challenge(self.config.challenge), summary)
+            check = check_summary(
+                load_builtin_challenge(self.config.challenge),
+                summary,
+                clean_trace=clean_trace,
+                perturbed_trace=perturbed_trace,
+                intervention_manifest_ref=self.config.intervention_manifest_ref,
+                metrics=self.config.metrics,
+            )
             check_data = dataclasses.asdict(check)
             check_path = self.config.result_dir / "check.json"
             check_path.write_text(json.dumps(check_data, indent=2, sort_keys=True) + "\n", encoding="utf-8")

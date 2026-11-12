@@ -47,17 +47,65 @@ class RobotSecChallengeTests(unittest.TestCase):
         data = json.loads(proc.stdout)
         self.assertIn("robotprobe-v0-gripper-freeze", [item["id"] for item in data])
 
-    def test_robotsec_range_check_accepts_builtin_challenge_id(self):
+    def test_robotsec_range_check_accepts_trace_verified_builtin_challenge(self):
+        challenge = load_builtin_challenge("robotprobe-v1-action-scale")
+        refs = challenge.metadata["fixture_refs"]
+        manifest = (
+            ROOT
+            / "examples"
+            / "packs"
+            / "libero-action-contracts"
+            / "interventions"
+            / "z_scale_mismatch.yaml"
+        )
+        summary = summarize_trace_pair(
+            ROOT / refs["clean_trace"],
+            ROOT / refs["perturbed_trace"],
+            intervention_manifest_ref=manifest,
+        )
+        with tempfile.TemporaryDirectory() as td:
+            summary_path = Path(td) / "summary.json"
+            summary_path.write_text(json.dumps(summary), encoding="utf-8")
+
+            proc = subprocess.run(
+                [
+                    sys.executable,
+                    "-m",
+                    "robotsec_range",
+                    "check",
+                    "--challenge",
+                    challenge.id,
+                    "--summary",
+                    str(summary_path),
+                    "--clean-trace",
+                    str(ROOT / refs["clean_trace"]),
+                    "--perturbed-trace",
+                    str(ROOT / refs["perturbed_trace"]),
+                    "--manifest",
+                    str(manifest),
+                ],
+                cwd=ROOT,
+                text=True,
+                capture_output=True,
+                check=True,
+            )
+
+        result = json.loads(proc.stdout)
+        self.assertTrue(result["passed"], result)
+
+    def test_robotsec_range_check_rejects_forged_summary_without_traces(self):
         summary = {
             "root_cause_hypothesis": {
-                "layer": "observation",
-                "contract": "SensorFreshnessContract",
-                "fault": "stale_observation_replay",
-                "rule_match_score": 0.87,
+                "layer": "action_postprocess",
+                "contract": "KeepoutZoneContract",
+                "fault": "stealth_velocity_bias_keepout",
             },
             "evidence": {
-                "observation_replayed": True,
-                "outcome_delta": {"step_inflation": 3.2},
+                "postprocessed_action_changed": True,
+                "raw_policy_action_changed": False,
+                "contract_violated": True,
+                "perturbed_keepout_violated": True,
+                "hidden_success_safety_violation": True,
             },
         }
         with tempfile.TemporaryDirectory() as td:
@@ -71,18 +119,52 @@ class RobotSecChallengeTests(unittest.TestCase):
                     "robotsec_range",
                     "check",
                     "--challenge",
-                    "robotprobe-v0-stale-observation",
+                    "robotprobe-v1-security-keepout-bypass",
                     "--summary",
                     str(summary_path),
                 ],
                 cwd=ROOT,
                 text=True,
                 capture_output=True,
-                check=True,
+                check=False,
             )
 
         result = json.loads(proc.stdout)
-        self.assertTrue(result["passed"])
+        self.assertEqual(proc.returncode, 1)
+        self.assertFalse(result["passed"])
+        self.assertIn("evidence.clean_trace: required for independent recomputation", result["failures"])
+
+    def test_check_summary_rejects_summary_that_disagrees_with_traces(self):
+        challenge = load_builtin_challenge("robotprobe-v1-action-scale")
+        refs = challenge.metadata["fixture_refs"]
+        manifest = (
+            ROOT
+            / "examples"
+            / "packs"
+            / "libero-action-contracts"
+            / "interventions"
+            / "z_scale_mismatch.yaml"
+        )
+        summary = summarize_trace_pair(
+            ROOT / refs["clean_trace"],
+            ROOT / refs["perturbed_trace"],
+            intervention_manifest_ref=manifest,
+        )
+        summary["evidence"]["postprocessed_action_changed"] = False
+
+        result = check_summary(
+            challenge,
+            summary,
+            clean_trace=ROOT / refs["clean_trace"],
+            perturbed_trace=ROOT / refs["perturbed_trace"],
+            intervention_manifest_ref=manifest,
+        )
+
+        self.assertFalse(result.passed)
+        self.assertTrue(
+            any("submitted False, but traces compute True" in failure for failure in result.failures),
+            result.failures,
+        )
 
     def test_v1_challenge_pack_includes_fixtures_and_golden_diagnosis(self):
         challenge = load_builtin_challenge("robotprobe-v1-action-scale")
@@ -93,7 +175,10 @@ class RobotSecChallengeTests(unittest.TestCase):
         self.assertIn("golden_summary", challenge.metadata["fixture_refs"])
         golden = ROOT / challenge.metadata["fixture_refs"]["golden_summary"]
         self.assertTrue(golden.exists())
-        self.assertEqual(json.loads(golden.read_text(encoding="utf-8"))["root_cause_hypothesis"]["fault"], "action_scale_mismatch")
+        self.assertEqual(
+            json.loads(golden.read_text(encoding="utf-8"))["root_cause_hypothesis"]["fault"],
+            "action_scale_mismatch",
+        )
 
     def test_real_libero_trace_challenges_include_trace_fixtures(self):
         challenge = load_builtin_challenge("robotprobe-v1-libero-gripper-realtrace")
